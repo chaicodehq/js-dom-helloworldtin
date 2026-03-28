@@ -72,21 +72,64 @@
  *   // => 2 (last frame applied: opacity is now "1")
  */
 export function applyBaseStyle(element, color, size) {
-  // Your code here
+  if (!element) return null;
+
+  const style = element.style;
+  style.backgroundColor = color;
+  style.height = size + "px";
+  style.width = size + "px";
+  style.borderRadius = "50%";
+
+  return element;
 }
 
 export function setPatternStyle(element, styles) {
-  // Your code here
+  if (!element) return -1;
+
+  if (styles === null || typeof styles !== "object") return 0;
+
+  const objectKeys = Object.keys(styles);
+
+  for (const key of objectKeys) {
+    element.style[key] = styles[key];
+  }
+
+  return objectKeys.length;
 }
 
 export function getComputedStyles(element, properties) {
-  // Your code here
+  if (!element) return null;
+  if (!Array.isArray(properties)) return null;
+
+  const styles = {};
+
+  for (const property of properties) {
+    styles[property] = element.style[property];
+  }
+
+  return styles;
 }
 
 export function toggleVisibility(element) {
-  // Your code here
+  if (!element) return null;
+
+  if (element.style.display === "none") {
+    element.style.display = "";
+    return "";
+  } else {
+    element.style.display = "none";
+    return "none";
+  }
 }
 
 export function animateElement(element, frames) {
-  // Your code here
+  if (!element) return -1;
+  if (!Array.isArray(frames) || frames.length === 0) return -1;
+
+  const lastStyle = frames.at(-1);
+
+  const key = Object.keys(lastStyle);
+
+  element.style[key] = lastStyle[key];
+  return frames.length;
 }
