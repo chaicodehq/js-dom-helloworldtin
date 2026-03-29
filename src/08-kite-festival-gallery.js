@@ -79,21 +79,100 @@
  *   // => 1 (only red kites shown)
  */
 export function renderKiteCard(kite) {
-  // Your code here
+  if (
+    !kite ||
+    !kite.name ||
+    !kite.size ||
+    !kite.maker ||
+    !kite.image ||
+    !kite.color
+  )
+    return null;
+
+  const div = document.createElement("div");
+  div.classList.add("kite-card");
+
+  const img = document.createElement("img");
+  img.setAttribute("src", kite.image);
+  img.setAttribute("alt", kite.name);
+
+  const h3 = document.createElement("h3");
+  h3.classList.add("kite-name");
+  h3.textContent = kite.name;
+
+  const p1 = document.createElement("p");
+  p1.classList.add("kite-maker");
+  p1.textContent = `by ${kite.maker}`;
+
+  const p2 = document.createElement("p");
+  p2.classList.add("kite-info");
+  p2.textContent = `${kite.size} - ${kite.color}`;
+
+  div.appendChild(img);
+  div.appendChild(h3);
+  div.appendChild(p1);
+  div.appendChild(p2);
+
+  return div;
 }
 
 export function renderGallery(container, kites) {
-  // Your code here
+  if (!container) return -1;
+  if (!Array.isArray(kites)) return -1;
+
+  container.innerHTML = "";
+
+  let count = 0;
+
+  for (const kite of kites) {
+    const kiteEl = renderKiteCard(kite);
+    if (!kiteEl) continue;
+    container.appendChild(kiteEl);
+    count++;
+  }
+  return count;
 }
 
 export function filterKites(container, kites, filterFn) {
-  // Your code here
+  if (!container) return -1;
+  if (!Array.isArray(kites) || typeof filterFn !== "function") return -1;
+
+  const filteredKites = kites.filter(filterFn);
+
+  return renderGallery(container, filteredKites);
 }
 
 export function sortAndRender(container, kites, sortField, order) {
-  // Your code here
+  if (!container || !Array.isArray(kites)) return [];
+
+  const kitesCpy = [...kites];
+
+  const sortOrder = order === "desc" ? "desc" : "asc";
+
+  kitesCpy.sort((a, b) => {
+    const valA = a[sortField] ?? "";
+    const valB = b[sortField] ?? "";
+
+    return sortOrder === "asc"
+      ? valA.localeCompare(valB)
+      : valB.localeCompare(valA);
+  });
+
+  container.innerHTML = "";
+  renderGallery(container, kitesCpy);
+
+  return kitesCpy;
 }
 
 export function renderEmptyState(container, message) {
-  // Your code here
+  if (!container) return false;
+
+  if (container.children.length > 0) return false;
+
+  const p = document.createElement("p");
+  p.classList.add("empty-state");
+  p.textContent = message;
+
+  container.appendChild(p);
+  return true;
 }
